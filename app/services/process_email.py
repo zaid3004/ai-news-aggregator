@@ -17,7 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def generate_email_digest(hours: int = 24, top_n: int = 10) -> EmailDigestResponse:
+def generate_email_digest(hours: int = 72, top_n: int = 10) -> EmailDigestResponse:
     curator = CuratorAgent(USER_PROFILE)
     email_agent = EmailAgent(USER_PROFILE)
     repo = Repository()
@@ -66,7 +66,7 @@ def generate_email_digest(hours: int = 24, top_n: int = 10) -> EmailDigestRespon
     return email_digest
 
 
-def send_digest_email(hours: int = 24, top_n: int = 10) -> dict:
+def send_digest_email(hours: int = 72, top_n: int = 10) -> dict:
     try:
         result = generate_email_digest(hours=hours, top_n=top_n)
         markdown_content = result.to_markdown()
@@ -95,7 +95,7 @@ def send_digest_email(hours: int = 24, top_n: int = 10) -> dict:
 
 
 if __name__ == "__main__":
-    result = send_digest_email(hours=24, top_n=10)
+    result = send_digest_email(hours=72, top_n=10)
     if result["success"]:
         print("\n=== Email Digest Sent ===")
         print(f"Subject: {result['subject']}")

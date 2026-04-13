@@ -35,7 +35,7 @@ def process_youtube_transcripts(limit: Optional[int] = None) -> dict:
     return {
         "total": len(videos),
         "processed": processed,
-        "unavilable": unavailable,
+        "unavailable": unavailable,
         "failed": failed,
     }
 

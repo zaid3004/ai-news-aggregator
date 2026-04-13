@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 from youtube_transcript_api.proxies import WebshareProxyConfig
+from app.config import YOUTUBE_CHANNELS
 
 class Transcript(BaseModel):
     text: str
@@ -55,8 +56,11 @@ class YouTubeScraper:
         except Exception:
             return None
     
-    def get_latest_videos(self, channel_id: str, hours: int = 24) -> list[ChannelVideo]:
+    def get_latest_videos(self, channel_id: str, hours: int = 72) -> list[ChannelVideo]:
         feed = feedparser.parse(self._get_rss_url(channel_id))
+
+        print(f"  → Feed entries found: {len(feed.entries)}")
+
         if not feed.entries:
             return []
 
@@ -67,6 +71,8 @@ class YouTubeScraper:
             if "/shorts/" in entry.link:
                 continue
             published_time = datetime(*entry.published_parsed[:6], tzinfo = timezone.utc)
+            
+            print(f"  → '{entry.title}' published: {published_time}, cutoff: {cutoff_time}, included: {published_time >= cutoff_time}")
 
             if published_time >= cutoff_time:
                 video_id = self._extract_video_id(entry.link)
@@ -80,7 +86,7 @@ class YouTubeScraper:
             
         return videos
     
-    def scrape_channel(self, channel_id: str, hours: int = 150) -> list[ChannelVideo]:
+    def scrape_channel(self, channel_id: str, hours: int = 72) -> list[ChannelVideo]:
         videos = self.get_latest_videos(channel_id, hours)
         result = []
         
@@ -93,8 +99,11 @@ class YouTubeScraper:
     
 if __name__ == "__main__":
     scraper = YouTubeScraper()
-    transcript: Transcript = scraper.get_transcript("jqd6_bbjhS8")
-    print(transcript.text)
-    channel_videos: list[ChannelVideo] = scraper.scrape_channel("UCn8ujwUInbJkBhffxqAPBVQ", hours=200)
-
     
+    all_videos = []
+    for channel_id in YOUTUBE_CHANNELS:
+        videos = scraper.scrape_channel(channel_id, hours=72)
+        all_videos.extend(videos)
+        print(f"✓ {channel_id}: {len(videos)} videos")
+    
+    print(f"\nTotal videos scraped: {len(all_videos)}")

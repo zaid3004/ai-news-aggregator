@@ -1,3 +1,4 @@
+# app/scrapers/anthropic.py
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 import feedparser
@@ -23,7 +24,7 @@ class AnthropicScraper:
         ]
         self.converter = DocumentConverter()
 
-    def get_articles(self, hours: int = 24) -> List[AnthropicArticle]:
+    def get_articles(self, hours: int = 72) -> List[AnthropicArticle]:
         now = datetime.now(timezone.utc)
         cutoff_time = now - timedelta(hours=hours)
         articles = []
@@ -64,6 +65,6 @@ class AnthropicScraper:
 
 if __name__ == "__main__":
     scraper = AnthropicScraper()
-    articles: List[AnthropicArticle] = scraper.get_articles(hours=100)
+    articles: List[AnthropicArticle] = scraper.get_articles(hours=72)
     markdown: str = scraper.url_to_markdown(articles[1].url)
     print(markdown)

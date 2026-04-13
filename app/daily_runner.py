@@ -1,3 +1,4 @@
+#app/daiy_runner.py
 import logging
 from datetime import datetime
 from dotenv import load_dotenv
@@ -18,7 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def run_daily_pipeline(hours: int = 24, top_n: int = 10) -> dict:
+def run_daily_pipeline(hours: int = 72, top_n: int = 10) -> dict:
     start_time = datetime.now()
     logger.info("=" * 60)
     logger.info("Starting Daily AI News Aggregator Pipeline")
@@ -96,6 +97,6 @@ def run_daily_pipeline(hours: int = 24, top_n: int = 10) -> dict:
 
 
 if __name__ == "__main__":
-    result = run_daily_pipeline(hours=24, top_n=10)
+    result = run_daily_pipeline(hours=72, top_n=10)
     exit(0 if result["success"] else 1)
 
