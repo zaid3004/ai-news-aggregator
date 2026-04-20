@@ -1,41 +1,38 @@
-services:
-  - type: pserv
-    name: ai-news-postgres
-    env: postgres
+databases:
+  - name: ai-news-aggregator-db
+    databaseName: ai_news_aggregator
+    user: ai_news_user
     plan: starter
-    disk:
-      name: ai-news-postgres-data
-      mountPath: /var/lib/postgresql/data
-      sizeGB: 10
 
+services:
   - type: cron
-    name: ai-news-daily-digest
+    name: daily-digest-job
     env: python
     runtime: python
     plan: starter
-    schedule: "0 9 * * *"
+    schedule: "0 5 * * *"
     buildCommand: "pip install --upgrade pip && pip install ."
     startCommand: "python -m app.database.create_tables && python main.py"
     envVars:
       - key: POSTGRES_HOST
         fromDatabase:
-          name: ai-news-postgres
+          name: ai-news-aggregator-db
           property: host
       - key: POSTGRES_PORT
         fromDatabase:
-          name: ai-news-postgres
+          name: ai-news-aggregator-db
           property: port
       - key: POSTGRES_DB
         fromDatabase:
-          name: ai-news-postgres
+          name: ai-news-aggregator-db
           property: database
       - key: POSTGRES_USER
         fromDatabase:
-          name: ai-news-postgres
+          name: ai-news-aggregator-db
           property: user
       - key: POSTGRES_PASSWORD
         fromDatabase:
-          name: ai-news-postgres
+          name: ai-news-aggregator-db
           property: password
       - key: GROQ_API_KEY
         sync: false
