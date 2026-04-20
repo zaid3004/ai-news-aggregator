@@ -9,6 +9,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from app.agent.digest_agent import DigestAgent
 from app.database.repository import Repository
 
+import time
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -56,6 +58,8 @@ def process_digests(limit: Optional[int] = None) -> dict:
             else:
                 failed += 1
                 logger.warning(f"✗ Failed to generate digest for {article_type} {article_id}")
+                
+            time.sleep(3)
         except Exception as e:
             failed += 1
             logger.error(f"✗ Error processing {article_type} {article_id}: {e}")
@@ -67,6 +71,8 @@ def process_digests(limit: Optional[int] = None) -> dict:
         "processed": processed,
         "failed": failed
     }
+    
+    
 
 
 if __name__ == "__main__":

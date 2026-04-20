@@ -20,7 +20,7 @@ class OpenAIScraper:
         self.rss_url = "https://openai.com/news/rss.xml"
         self.converter = DocumentConverter()
 
-    def get_articles(self, hours: int = 72) -> List[OpenAIArticle]:
+    def get_articles(self, hours: int = 24) -> List[OpenAIArticle]:
         feed = feedparser.parse(self.rss_url)
         if not feed.entries:
             return []
@@ -50,4 +50,4 @@ class OpenAIScraper:
   
 if __name__ == "__main__":
     scraper = OpenAIScraper()
-    articles: List[OpenAIArticle] = scraper.get_articles(hours=72)
+    articles: List[OpenAIArticle] = scraper.get_articles(hours=24)

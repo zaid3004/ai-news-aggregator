@@ -56,7 +56,7 @@ class YouTubeScraper:
         except Exception:
             return None
     
-    def get_latest_videos(self, channel_id: str, hours: int = 72) -> list[ChannelVideo]:
+    def get_latest_videos(self, channel_id: str, hours: int = 24) -> list[ChannelVideo]:
         feed = feedparser.parse(self._get_rss_url(channel_id))
 
         print(f"  → Feed entries found: {len(feed.entries)}")
@@ -86,7 +86,7 @@ class YouTubeScraper:
             
         return videos
     
-    def scrape_channel(self, channel_id: str, hours: int = 72) -> list[ChannelVideo]:
+    def scrape_channel(self, channel_id: str, hours: int = 24) -> list[ChannelVideo]:
         videos = self.get_latest_videos(channel_id, hours)
         result = []
         
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     
     all_videos = []
     for channel_id in YOUTUBE_CHANNELS:
-        videos = scraper.scrape_channel(channel_id, hours=72)
+        videos = scraper.scrape_channel(channel_id, hours=24)
         all_videos.extend(videos)
         print(f"✓ {channel_id}: {len(videos)} videos")
     

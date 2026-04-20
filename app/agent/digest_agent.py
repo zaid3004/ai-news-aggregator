@@ -35,19 +35,18 @@ Guidelines:
 class DigestAgent:
     def __init__(self):
         self.client = OpenAI(
-            api_key=os.getenv("OLLAMA_API_KEY"),
-            base_url="http://localhost:11434/v1"
+            api_key=os.getenv("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1"
         )
-
-        # Free-tier fallback models (rotate if needed)
+        
         self.models = [
-            "mistral"
+            "llama-3.3-70b-versatile",
+            "qwen/qwen3-32b",
         ]
 
         self.system_prompt = PROMPT
-
-        # HARD throttle (critical for free tier)
-        self.request_delay = 6  # seconds
+        
+        self.request_delay = 8  # seconds
 
 
     def generate_digest(
@@ -96,7 +95,7 @@ class DigestAgent:
 
                     # Rate limit handling
                     if "429" in err:
-                        wait = (2 ** attempt) * 5 + random.uniform(1, 3)
+                        wait = (2 ** attempt) * 8 + random.uniform(1, 3)
                         print(f"⚠ Rate limited. Waiting {wait:.2f}s...")
                         time.sleep(wait)
                         continue

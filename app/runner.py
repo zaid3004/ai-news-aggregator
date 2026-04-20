@@ -7,7 +7,7 @@ from .scrapers.anthropic import AnthropicScraper, AnthropicArticle
 from .database.repository import Repository
 
 
-def run_scrapers(hours: int = 72) -> dict:
+def run_scrapers(hours: int = 24) -> dict:
     youtube_scraper = YouTubeScraper()
     openai_scraper = OpenAIScraper()
     anthropic_scraper = AnthropicScraper()
@@ -73,7 +73,7 @@ def run_scrapers(hours: int = 72) -> dict:
 
 
 if __name__ == "__main__":
-    results = run_scrapers(hours=72)
+    results = run_scrapers(hours=24)
     print(f"YouTube videos: {len(results['youtube'])}")
     print(f"OpenAI articles: {len(results['openai'])}")
     print(f"Anthropic articles: {len(results['anthropic'])}")

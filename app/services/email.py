@@ -10,6 +10,7 @@ load_dotenv()
 
 MY_EMAIL = os.getenv("MY_EMAIL")
 APP_PASSWORD = os.getenv("APP_PASSWORD")
+RECIPIENT_EMAILS = [e.strip() for e in os.getenv("RECIPIENT_EMAILS", MY_EMAIL or "").split(",") if e.strip()]
 
 
 def send_email(subject: str, body_text: str, body_html: str = None, recipients: list = None):
@@ -233,10 +234,8 @@ def digest_to_html(digest_response) -> str:
 </html>"""
 
 
-def send_email_to_self(subject: str, body: str):
-    if not MY_EMAIL:
-        raise ValueError("MY_EMAIL environment variable is not set. Please set it in your .env file.")
-    send_email(subject, body, recipients=[MY_EMAIL])
+def send_email_to_self(subject: str, body: str, body_html: str = None):
+    send_email(subject, body, body_html=body_html, recipients=[RECIPIENT_EMAILS])
 
 
 if __name__ == "__main__":
